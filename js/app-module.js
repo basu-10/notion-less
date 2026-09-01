@@ -32,6 +32,24 @@
 
     const $ = (sel) => document.querySelector(sel);
 
+    function applyTheme(mode) {
+      const html = document.documentElement;
+      html.removeAttribute("data-theme");
+      if (mode === "light") html.setAttribute("data-theme", "light");
+      else if (mode === "dark") html.setAttribute("data-theme", "dark");
+      else {
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDark) html.setAttribute("data-theme", "dark");
+        else html.setAttribute("data-theme", "light");
+      }
+      try { localStorage.setItem("notion-theme", mode); } catch {}
+      document.querySelectorAll(".theme-btn").forEach(b => b.classList.toggle("active", b.dataset.theme === mode));
+    }
+
+    function getTheme() {
+      try { return localStorage.getItem("notion-theme") || "auto"; } catch { return "auto"; }
+    }
+
     function uid(prefix="page") {
       return prefix + "_" + Math.random().toString(36).slice(2, 8) + Date.now().toString(36);
     }
@@ -102,8 +120,9 @@
     function markDirty() {
       state.dirty = true;
       setSaveState("Unsaved");
+      $("#saveBtn").classList.add("visible");
       clearTimeout(state.saveTimer);
-      state.saveTimer = setTimeout(saveCurrent, 550);
+      state.saveTimer = setTimeout(saveCurrent, 3000);
     }
 
     async function saveCurrent() {
@@ -115,6 +134,7 @@
       state.pages.set(page.id, page);
       await dbPut(page);
       state.dirty = false;
+      $("#saveBtn").classList.remove("visible");
       setSaveState("Saved · " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
       renderTree();
       renderBreadcrumbs();
@@ -125,7 +145,47 @@
         await dbPut(page);
       }
       state.dirty = false;
+      $("#saveBtn").classList.remove("visible");
       setSaveState("All pages saved");
+    }
+
+    function exportProfile() {
+      const payload = { meta: { exportedAt: Date.now(), version: 1 }, pages: Array.from(state.pages.values()) };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "notion-profile.json"; a.click(); URL.revokeObjectURL(url);
+      setSaveState("Profile exported");
+    }
+
+    function exportNote() {
+      const page = state.pages.get(state.currentPageId);
+      if (!page) return alert("No page open");
+      const payload = { meta: { exportedAt: Date.now(), version: 1, id: page.id, title: page.title }, page };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = (page.title || "note") + ".json"; a.click(); URL.revokeObjectURL(url);
+      setSaveState("Note exported");
+    }
+
+    async function importProfile(file) {
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!data.pages || !Array.isArray(data.pages)) throw new Error("Invalid profile file");
+        for (const p of data.pages) {
+          state.pages.set(p.id, p);
+          await dbPut(p);
+        }
+        state.dirty = false; $("#saveBtn").classList.remove("visible");
+        setSaveState("Profile imported");
+        renderTree(); renderBreadcrumbs();
+        const first = childrenOf(ROOT)[0];
+        if (first && first.id !== state.currentPageId) await openPage(first.id);
+      } catch (e) {
+        alert("Import failed: " + (e.message || e));
+      }
     }
 
     function childrenOf(parentId) {
@@ -467,8 +527,6 @@
         positionSlashMenu();
       }
     }
-      }
-    }
 
     async function initialize() {
       try {
@@ -491,6 +549,7 @@
       }
 
       state.expanded.add(ROOT);
+      applyTheme(getTheme());
       const first = state.pages.get("welcome") || childrenOf(ROOT)[0];
       await openPage(first.id);
       setSaveState("Ready");
@@ -498,7 +557,7 @@
 
     $("#newPageBtn").addEventListener("click", () => createPage(ROOT));
     $("#saveBtn").addEventListener("click", saveCurrent);
-    $("#reloadBtn").addEventListener("click", async () => {
+    $("#reloadBtn")?.addEventListener("click", async () => {
       const ok = !state.dirty || confirm("Reload the saved version and discard unsaved changes?");
       if (!ok) return;
       const rows = await dbGetAll();
@@ -533,8 +592,28 @@
       if ($("#slashMenu").classList.contains("open")) positionSlashMenu();
     });
     window.addEventListener("beforeunload", () => {
-      // Fire-and-forget best effort. Browsers may terminate the page immediately.
       saveCurrent();
     });
+
+    // Theme
+    document.querySelectorAll(".theme-btn").forEach(b => b.addEventListener("click", () => applyTheme(b.dataset.theme)));
+    $("#settingsBtn").addEventListener("click", () => $("#settingsPanel").classList.add("open"));
+    $("#closeSettings").addEventListener("click", () => $("#settingsPanel").classList.remove("open"));
+    document.addEventListener("mousedown", (e) => {
+      const panel = $("#settingsPanel");
+      if (panel.classList.contains("open") && !panel.contains(e.target) && !$("#settingsBtn").contains(e.target)) panel.classList.remove("open");
+    });
+
+    // Export / Import
+    $("#exportProfile").addEventListener("click", exportProfile);
+    $("#exportNote").addEventListener("click", exportNote);
+    $("#importProfile").addEventListener("click", () => $("#importFile").click());
+    $("#importFile").addEventListener("change", (e) => { if (e.target.files && e.target.files[0]) importProfile(e.target.files[0]); e.target.value = ""; });
+
+    // System theme listener
+    try {
+      const mql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+      if (mql && mql.addEventListener) mql.addEventListener("change", () => { if (getTheme() === "auto") applyTheme("auto"); });
+    } catch {}
 
     initialize();

@@ -294,3 +294,36 @@
       .page-title { font-size:33px; }
     }
   
+/* ---------- Settings panel ---------- */
+.settings-panel {
+  position: fixed; top: 0; right: 0; width: 360px; max-width: 92vw; height: 100vh;
+  background: var(--panel); border-left: 1px solid var(--border);
+  box-shadow: -12px 0 40px rgba(0,0,0,.08); transform: translateX(110%); transition: transform .25s ease;
+  z-index: 100; padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px;
+}
+.settings-panel.open { transform: translateX(0); }
+.settings-header { display: flex; align-items: center; justify-content: space-between; }
+.settings-header h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.settings-section h3 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.theme-options { display: flex; gap: 8px; }
+.theme-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; }
+.theme-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.theme-btn:hover:not(.active) { background: var(--hover); }
+.export-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.action-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; }
+.action-btn:hover { background: var(--hover); }
+.hint { color: var(--muted); font-size: 12px; margin: 4px 0 0; }
+
+/* ---------- Dark theme ---------- */
+html[data-theme="dark"], html[data-theme="dark"] body {
+  --bg: #18181b; --sidebar: #222228; --panel: #1c1c21; --border: #2a2a2f;
+  --text: #e8e8ef; --muted: #a7a7a3; --hover: #2a2a30; --active: #32323a;
+  --shadow: 0 12px 40px rgba(0,0,0,.25);
+}
+html[data-theme="dark"] .brand-mark { background: #26262c; border-color: #333; }
+html[data-theme="dark"] .new-page { color: #ddd; }
+html[data-theme="dark"] .sidebar-section { color: #9e9e99; }
+
+/* ---------- Save button visibility ---------- */
+#saveBtn { display: none; }
+#saveBtn.visible { display: inline-block; }
