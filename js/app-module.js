@@ -497,7 +497,6 @@
     }
 
     $("#newPageBtn").addEventListener("click", () => createPage(ROOT));
-    $("#newTopPage").addEventListener("click", () => createPage(ROOT));
     $("#saveBtn").addEventListener("click", saveCurrent);
     $("#reloadBtn").addEventListener("click", async () => {
       const ok = !state.dirty || confirm("Reload the saved version and discard unsaved changes?");
@@ -508,7 +507,17 @@
       if (current) await openPage(current);
     });
     $("#collapseAll").addEventListener("click", () => {
-      state.expanded = new Set([ROOT]);
+      const allIds = new Set([...state.pages.values()].map(p => p.id));
+      const collapsed = state.expanded.size === 1 && state.expanded.has(ROOT);
+      if (collapsed) {
+        state.expanded = new Set(allIds);
+        $("#collapseAll").textContent = "−";
+        $("#collapseAll").title = "Collapse all";
+      } else {
+        state.expanded = new Set([ROOT]);
+        $("#collapseAll").textContent = "+";
+        $("#collapseAll").title = "Show all";
+      }
       renderTree();
     });
     $("#pageTitle").addEventListener("input", markDirty);
