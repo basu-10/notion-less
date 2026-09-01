@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Notes — BlockNote Workspace</title>
+<title>NotionLess</title>
 <link rel="preconnect" href="https://esm.sh">
 <link rel="stylesheet" href="css/theme.css">
 <link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/style.css">
@@ -11,35 +11,178 @@
 <style>
   @import url('css/app.css');
   body { overflow:auto; background:var(--bg); }
-  .landing { max-width:720px; margin:0 auto; padding:80px 24px; }
-  h1 { font-size:2.2rem; font-weight:700; letter-spacing:-.02em; line-height:1.15; }
-  .lead { color:var(--muted); font-size:1.15rem; margin:10px 0 28px; }
-  a.card { display:block; padding:22px; border:1px solid var(--border); border-radius:var(--radius); background:var(--panel); text-decoration:none; color:inherit; box-shadow:var(--shadow); transition:transform .08s ease, box-shadow .08s ease; }
-  a.card:hover { transform:translateY(-2px); box-shadow:0 18px 50px rgba(0,0,0,.08); }
-  a.card h2 { margin:0 0 6px; font-size:1.1rem; }
-  a.card p { margin:0; color:var(--muted); font-size:.95rem; }
-  .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top:24px; }
-  .brand-row { display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.1rem; margin-bottom:6px; }
-  .brand-mark { width:26px; height:26px; display:grid; place-items:center; border-radius:7px; background:#fff; border:1px solid var(--border); box-shadow:0 1px 2px rgba(0,0,0,.04); font-size:13px; }
+
+  .landing {
+    max-width:680px;
+    margin:0 auto;
+    padding:100px 24px 80px;
+  }
+
+  .brand-row {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    font-size:1rem;
+    margin-bottom:48px;
+  }
+  .brand-mark {
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+    font-size:13px;
+  }
+
+  .hero {
+    margin-bottom:56px;
+  }
+  h1 {
+    font-size:2.6rem;
+    font-weight:700;
+    letter-spacing:-.03em;
+    line-height:1.1;
+    margin:0 0 18px;
+    color:var(--text);
+  }
+  .lead {
+    font-size:1.15rem;
+    line-height:1.55;
+    color:var(--muted);
+    margin:0;
+    max-width:520px;
+  }
+
+  .features {
+    display:grid;
+    gap:14px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    margin-bottom:56px;
+  }
+  .feature {
+    padding:22px 24px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--panel);
+    box-shadow:var(--shadow);
+  }
+  .feature h2 {
+    font-size:.95rem;
+    font-weight:700;
+    margin:0 0 6px;
+    color:var(--text);
+  }
+  .feature p {
+    font-size:.875rem;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0;
+  }
+
+  .nav {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .nav a {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 20px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    background:var(--panel);
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:var(--text);
+    font-size:.9rem;
+    font-weight:600;
+    transition:transform .1s ease, box-shadow .1s ease;
+  }
+  .nav a:hover {
+    transform:translateY(-2px);
+    box-shadow:0 16px 44px rgba(0,0,0,.08);
+  }
+  .nav a.primary {
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+  }
+  .nav a svg {
+    width:15px;
+    height:15px;
+    flex-shrink:0;
+  }
+
+  footer {
+    margin-top:72px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer p {
+    margin:0;
+    font-size:.8rem;
+    color:var(--muted);
+  }
+  footer a {
+    color:var(--accent);
+    text-decoration:none;
+    font-size:.8rem;
+  }
+  footer a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
 <main class="landing" role="main" aria-label="Landing">
-  <div class="brand-row"><div class="brand-mark" aria-hidden="true">N</div><span>Notes</span></div>
-  <h1>A block-based workspace.</h1>
-  <p class="lead">Notion-like editing with BlockNote core, IndexedDB persistence, and a soft neuromorphic monochrome surface.</p>
-  <div class="grid" role="list" aria-label="Pages">
-    <a class="card" href="app.html" role="listitem" aria-label="Workspace">
-      <h2>Workspace</h2>
-      <p>Open the editor. Create pages, organize with a tree, save to IndexedDB.</p>
-    </a>
-    <a class="card" href="about.html" role="listitem" aria-label="About">
-      <h2>About</h2>
-      <p>Project structure, Cloudflare Pages hosting, and reusable component files.</p>
-    </a>
+  <div class="brand-row" aria-label="NotionLess">
+    <div class="brand-mark" aria-hidden="true">NL</div>
+    <span>NotionLess</span>
   </div>
-  <footer style="margin-top:60px; color:var(--muted); font-size:.85rem;">
-    Hosted on Cloudflare Pages · Static site · No build step
+
+  <div class="hero">
+    <h1>A minimal, secure block-based workspace.</h1>
+    <p class="lead">Write and organize notes with nested pages, a clean editor all in your browser. No accounts, no sync, no noise.</p>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <h2>Block-based editing</h2>
+      <p>Rich block types via slash commands. Nest, reorder, and style content with keyboard-first navigation.</p>
+    </div>
+    <div class="feature">
+      <h2>Hierarchical pages</h2>
+      <p>Organize with a collapsible tree. Drag pages into folders, expand sections, keep context.</p>
+    </div>
+    <div class="feature">
+      <h2>Local persistence</h2>
+      <p>Everything saves to IndexedDB in the browser. Your data stays on your device, accessible offline.</p>
+    </div>
+  </div>
+
+  <nav class="nav" aria-label="Pages">
+    <a href="app.html" class="primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Open workspace
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      About the project
+    </a>
+  </nav>
+
+  <footer>
+    <p>Static site · No build step · Browser-native</p>
+
+    <p>With ❤️ from India.</p>
   </footer>
 </main>
 </body>
