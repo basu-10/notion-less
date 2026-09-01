@@ -427,11 +427,12 @@
     }
 
     function closeSlashMenu() {
-      $("#slashMenu").classList.remove("open");
+      const menu = $("#slashMenu");
+      if (!menu.classList.contains("open")) return;
+      menu.classList.remove("open");
       try {
         const block = getCurrentBlock();
         if (block) {
-          // If there's leftover filter text (e.g., user typed then pressed Esc), clear it.
           const txt = currentBlockText(block);
           if (txt) {
             state.editor.updateBlock(block, { content: "" });
