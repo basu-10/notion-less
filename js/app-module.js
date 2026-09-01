@@ -7,7 +7,7 @@
     const ROOT = "root";
 
     const BLOCKS = [
-      { key: "page",   icon: "⊕", label: "Sub-page",   desc: "Create nested child page", type: "page" },
+      { key: "page",   icon: "⊕", label: "Page",       desc: "Create nested child page", type: "page" },
       { key: "text",   icon: "T", label: "Text",       desc: "Plain text paragraph", type: "paragraph" },
       { key: "h1",     icon: "H1", label: "Heading 1",  desc: "Large section heading", type: "heading", props: { level: 1 } },
       { key: "h2",     icon: "H2", label: "Heading 2",  desc: "Medium section heading", type: "heading", props: { level: 2 } },
@@ -595,6 +595,29 @@
     });
     $("#pageTitle").addEventListener("input", markDirty);
     $("#pageTitle").addEventListener("blur", saveCurrent);
+    $("#pageTitle").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const titleInput = $("#pageTitle");
+        const value = titleInput.value;
+        const pos = titleInput.selectionStart;
+        const afterCursor = value.slice(pos);
+        const beforeCursor = value.slice(0, pos).trim() || "Untitled";
+
+        titleInput.value = beforeCursor;
+        markDirty();
+
+        if (afterCursor) {
+          const block = state.editor.document[0];
+          if (block) {
+            const blockText = state.editor.getText(block.id);
+            state.editor.updateBlock(block, { content: afterCursor + (blockText ? " " + blockText : "") });
+          }
+        }
+
+        state.editor.focus();
+      }
+    });
 
     document.addEventListener("mousedown", (e) => {
       const slash = $("#slashMenu");
