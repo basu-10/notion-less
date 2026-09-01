@@ -5,9 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>About — NotionLess</title>
 <link rel="stylesheet" href="css/theme.css">
-<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/style.css">
-<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/fonts/inter.css">
-<style>
+  <link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/style.css">
+  <link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/fonts/inter.css">
+  <script>
+    (function () {
+      var key = "notion-theme";
+      var mode;
+      try { mode = localStorage.getItem(key) || "auto"; }
+      catch (e) { mode = "auto"; }
+      var html = document.documentElement;
+      html.removeAttribute("data-theme");
+      if (mode === "light") html.setAttribute("data-theme", "light");
+      else if (mode === "dark") html.setAttribute("data-theme", "dark");
+      else {
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        html.setAttribute("data-theme", dark ? "dark" : "light");
+      }
+    })();
+  </script>
+  <style>
   @import url('css/app.css');
   body { overflow:auto; background:var(--bg); }
 
