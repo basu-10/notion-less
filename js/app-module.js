@@ -615,6 +615,17 @@
     $("#importProfile").addEventListener("click", () => $("#importFile").click());
     $("#importFile").addEventListener("change", (e) => { if (e.target.files && e.target.files[0]) importProfile(e.target.files[0]); e.target.value = ""; });
 
+    // Top-left brand mark navigates back to the landing/index page
+    const brand = document.querySelector(".brand");
+    if (brand) {
+      brand.addEventListener("click", () => { window.location.href = "index.html"; });
+      brand.style.cursor = "pointer";
+    }
+    const brandMark = document.querySelector(".brand-mark");
+    if (brandMark) {
+      brandMark.addEventListener("click", (e) => { e.stopPropagation(); window.location.href = "index.html"; });
+    }
+
     // Mobile sidebar toggle
     function toggleSidebar(force) {
       const sb = document.querySelector(".sidebar");
