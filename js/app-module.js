@@ -424,6 +424,10 @@
       });
       menu.classList.add("open");
       positionSlashMenu();
+      requestAnimationFrame(() => {
+        const selected = menu.querySelector(".slash-item.selected");
+        if (selected) selected.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
     }
 
     function closeSlashMenu() {
