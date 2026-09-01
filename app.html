@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#d85b45">
+  <meta name="description" content="A lightweight, block-based note-taking workspace">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>NotionLess</title>
 
   <!-- BlockNote vanilla-JS CSS. The JS below loads BlockNote core from CDN. -->
@@ -87,5 +91,14 @@
   </aside>
 
   <script type="module" src="js/app-module.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((reg) => console.log('SW registered:', reg.scope))
+          .catch((err) => console.error('SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
