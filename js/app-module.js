@@ -7,6 +7,7 @@
     const ROOT = "root";
 
     const BLOCKS = [
+      { key: "page",   icon: "⊕", label: "Sub-page",   desc: "Create nested child page", type: "page" },
       { key: "text",   icon: "T", label: "Text",       desc: "Plain text paragraph", type: "paragraph" },
       { key: "h1",     icon: "H1", label: "Heading 1",  desc: "Large section heading", type: "heading", props: { level: 1 } },
       { key: "h2",     icon: "H2", label: "Heading 2",  desc: "Medium section heading", type: "heading", props: { level: 2 } },
@@ -448,7 +449,13 @@
       state.slashIndex = 0;
     }
 
-    function chooseSlash(command) {
+    async function chooseSlash(command) {
+      if (command.type === "page") {
+        closeSlashMenu();
+        if (state.dirty) await saveCurrent();
+        await createPage(state.currentPageId);
+        return;
+      }
       const block = getCurrentBlock();
       if (!block) return closeSlashMenu();
       try {
@@ -478,7 +485,9 @@
         if (e.key === "ArrowUp") { e.preventDefault(); state.slashIndex--; renderSlashMenu(); return; }
         if (e.key === "Enter" || e.key === "Tab") {
           e.preventDefault();
-          const cmd = filteredCommands()[state.slashIndex];
+          const cmds = filteredCommands();
+          if (!cmds.length) { closeSlashMenu(); return; }
+          const cmd = cmds[state.slashIndex];
           if (cmd) chooseSlash(cmd);
           return;
         }
