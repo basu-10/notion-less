@@ -317,9 +317,22 @@
 
     function positionSlashMenu() {
       const menu = $("#slashMenu");
+      let r = null;
       const sel = window.getSelection();
-      if (!sel || !sel.rangeCount) return;
-      const r = sel.getRangeAt(0).getBoundingClientRect();
+      if (sel && sel.rangeCount) {
+        r = sel.getRangeAt(0).getBoundingClientRect();
+      }
+      // Fallback when selection is empty (e.g., inside contenteditable after DOM updates)
+      if ((!r || (r.width === 0 && r.height === 0)) && document.activeElement) {
+        const active = document.activeElement;
+        if (active && active.getBoundingClientRect) {
+          const rect = active.getBoundingClientRect();
+          if (rect && (rect.width > 0 || rect.height > 0)) {
+            r = rect;
+          }
+        }
+      }
+      if (!r) return;
       const left = Math.min(Math.max(12, r.left), window.innerWidth - 312);
       const top = Math.min(Math.max(12, r.bottom + 8), window.innerHeight - 350);
       menu.style.left = left + "px";
@@ -355,6 +368,17 @@
 
     function closeSlashMenu() {
       $("#slashMenu").classList.remove("open");
+      try {
+        const block = getCurrentBlock();
+        if (block) {
+          // If there's leftover filter text (e.g., user typed then pressed Esc), clear it.
+          const txt = currentBlockText(block);
+          if (txt) {
+            state.editor.updateBlock(block, { content: "" });
+            state.editor.setTextCursorPosition(block.id, "start");
+          }
+        }
+      } catch {}
       state.slashFilter = "";
       state.slashIndex = 0;
     }
@@ -396,7 +420,7 @@
         if (e.key === "Escape") { e.preventDefault(); closeSlashMenu(); return; }
         if (e.key === "Backspace") {
           const next = text.length ? text.slice(0, -1) : "";
-          state.slashFilter = next.startsWith("/") ? next.slice(1) : "";
+          state.slashFilter = next;
           state.slashIndex = 0;
           setTimeout(() => renderSlashMenu(), 0);
           return;
@@ -413,6 +437,7 @@
         // Only open the slash palette for a new/empty paragraph-like block or at the beginning of text.
         const isStart = text.trim() === "" || text.trim() === "/";
         if (isStart) {
+          e.preventDefault();
           state.slashFilter = "";
           state.slashIndex = 0;
           setTimeout(renderSlashMenu, 0);
@@ -433,14 +458,15 @@
       if (!$("#slashMenu").classList.contains("open")) return;
       const block = getCurrentBlock();
       const text = currentBlockText(block);
-      if (!text.startsWith("/")) closeSlashMenu();
-      else {
-        const withoutSlash = text.slice(1);
-        if (withoutSlash !== state.slashFilter) {
-          state.slashFilter = withoutSlash;
-          state.slashIndex = 0;
-          renderSlashMenu();
-        }
+      const next = text || "";
+      if (next !== state.slashFilter) {
+        state.slashFilter = next;
+        state.slashIndex = 0;
+        renderSlashMenu();
+      } else {
+        positionSlashMenu();
+      }
+    }
       }
     }
 
