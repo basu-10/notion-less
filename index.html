@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notes — BlockNote Workspace</title>
+<link rel="preconnect" href="https://esm.sh">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/style.css">
+<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/fonts/inter.css">
+<style>
+  @import url('css/app.css');
+  body { overflow:auto; background:var(--bg); }
+  .landing { max-width:720px; margin:0 auto; padding:80px 24px; }
+  h1 { font-size:2.2rem; font-weight:700; letter-spacing:-.02em; line-height:1.15; }
+  .lead { color:var(--muted); font-size:1.15rem; margin:10px 0 28px; }
+  a.card { display:block; padding:22px; border:1px solid var(--border); border-radius:var(--radius); background:var(--panel); text-decoration:none; color:inherit; box-shadow:var(--shadow); transition:transform .08s ease, box-shadow .08s ease; }
+  a.card:hover { transform:translateY(-2px); box-shadow:0 18px 50px rgba(0,0,0,.08); }
+  a.card h2 { margin:0 0 6px; font-size:1.1rem; }
+  a.card p { margin:0; color:var(--muted); font-size:.95rem; }
+  .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top:24px; }
+  .brand-row { display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.1rem; margin-bottom:6px; }
+  .brand-mark { width:26px; height:26px; display:grid; place-items:center; border-radius:7px; background:#fff; border:1px solid var(--border); box-shadow:0 1px 2px rgba(0,0,0,.04); font-size:13px; }
+</style>
+</head>
+<body>
+<main class="landing" role="main" aria-label="Landing">
+  <div class="brand-row"><div class="brand-mark" aria-hidden="true">N</div><span>Notes</span></div>
+  <h1>A block-based workspace.</h1>
+  <p class="lead">Notion-like editing with BlockNote core, IndexedDB persistence, and a soft neuromorphic monochrome surface.</p>
+  <div class="grid" role="list" aria-label="Pages">
+    <a class="card" href="app.html" role="listitem" aria-label="Workspace">
+      <h2>Workspace</h2>
+      <p>Open the editor. Create pages, organize with a tree, save to IndexedDB.</p>
+    </a>
+    <a class="card" href="about.html" role="listitem" aria-label="About">
+      <h2>About</h2>
+      <p>Project structure, Cloudflare Pages hosting, and reusable component files.</p>
+    </a>
+  </div>
+  <footer style="margin-top:60px; color:var(--muted); font-size:.85rem;">
+    Hosted on Cloudflare Pages · Static site · No build step
+  </footer>
+</main>
+</body>
+</html>

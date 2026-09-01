@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Notion-like BlockNote Workspace</title>
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/style.css">
+<link rel="stylesheet" href="https://esm.sh/@blocknote/core@0.51.3/fonts/inter.css">
+<style>
+  @import url('css/app.css');
+  body { overflow:auto; background:var(--bg); }
+  .about { max-width:720px; margin:0 auto; padding:80px 24px; }
+  h1 { font-size:2rem; font-weight:700; letter-spacing:-.02em; }
+  h2 { font-size:1.15rem; font-weight:600; margin-top:32px; border-bottom:1px solid var(--border); padding-bottom:8px; }
+  p, ul { color:var(--text); line-height:1.6; }
+  code { background:var(--sidebar); padding:2px 6px; border-radius:5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9em; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:var(--hover); border:1px solid var(--border); font-size:.8rem; color:var(--muted); margin-right:6px; }
+</style>
+</head>
+<body>
+<main class="about" role="main" aria-label="About">
+  <h1>About this workspace</h1>
+  <p>A Notion-like block editor built with <strong>BlockNote core v0.51.3</strong>, served as static files on <strong>Cloudflare Pages</strong>. No backend, no build step — open <code>app.html</code> or serve with <code>python -m http.server</code>.</p>
+
+  <h2>Structure (chunked by standard)</h2>
+  <ul>
+    <li><code>app.html</code> — main workspace (links to external assets)</li>
+    <li><code>index.html</code> — landing page</li>
+    <li><code>css/theme.css</code> — design tokens (<code>--accent</code>, shadows, radius)</li>
+    <li><code>css/app.css</code> — layout, sidebar, panel, menus, editors</li>
+    <li><code>js/app-module.js</code> — BlockNote init, IndexedDB, render, slash/context menus</li>
+    <li><code>components/</code> — reusable HTML partials (brandbar, sidebar-tools, tree, topbar, editor, menus)</li>
+    <li><code>pages/</code> — reserved for future routed pages (not required for Pages static hosting)</li>
+  </ul>
+
+  <h2>Cloudflare Pages notes</h2>
+  <ul>
+    <li>Root <code>index.html</code> is the Pages entry point.</li>
+    <li>No build command required; deploy the whole folder.</li>
+    <li>Assets in <code>css/</code>, <code>js/</code>, <code>components/</code> are served statically.</li>
+    <li>CDN links to <code>esm.sh</code> work without additional configuration.</li>
+  </ul>
+
+  <h2>Theme</h2>
+  <p>Soft neuromorphic monochrome: a single accent hue (<code>#d85b45</code>), paired soft shadows, gentle gradients, one neutral base tone. All tokens live in <code>css/theme.css</code>; derived shades are computed via <code>color-mix</code> where needed.</p>
+
+  <div style="margin-top:32px;">
+    <span class="tag">Static</span><span class="tag">Cloudflare Pages</span><span class="tag">BlockNote</span><span class="tag">IndexedDB</span><span class="tag">Vanilla JS</span>
+  </div>
+  <p style="margin-top:24px;"><a href="index.html">← Back to landing</a> · <a href="app.html">Open workspace →</a></p>
+</main>
+</body>
+</html>
