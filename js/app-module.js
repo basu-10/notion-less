@@ -615,6 +615,17 @@
     $("#importProfile").addEventListener("click", () => $("#importFile").click());
     $("#importFile").addEventListener("change", (e) => { if (e.target.files && e.target.files[0]) importProfile(e.target.files[0]); e.target.value = ""; });
 
+    // Mobile sidebar toggle
+    function toggleSidebar(force) {
+      const sb = document.querySelector(".sidebar");
+      const bd = $("#mobileBackdrop");
+      if (force === true) { sb.classList.add("open"); bd.classList.add("open"); }
+      else if (force === false) { sb.classList.remove("open"); bd.classList.remove("open"); }
+      else { sb.classList.toggle("open"); bd.classList.toggle("open"); }
+    }
+    $("#mobileMenuBtn").addEventListener("click", () => toggleSidebar());
+    $("#mobileBackdrop").addEventListener("click", () => toggleSidebar(false));
+
     // System theme listener
     try {
       const mql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
